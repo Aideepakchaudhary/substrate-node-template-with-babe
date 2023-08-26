@@ -20,7 +20,7 @@ use super::benchmarking::{inherent_benchmark_data, RemarkBuilder, TransferKeepAl
 use crate::{
 	chain_spec, service,
 	service::{new_partial, FullClient},
-	Cli, Subcommand,
+	cli::{Cli, Subcommand},
 };
 use frame_benchmarking_cli::*;
 use node_template_runtime::{ExistentialDeposit, RuntimeApi};
@@ -72,7 +72,7 @@ impl SubstrateCli for Cli {
 				),
 			"dev" => Box::new(chain_spec::development_config()),
 			"local" => Box::new(chain_spec::local_testnet_config()),
-			"fir" | "flaming-fir" => Box::new(chain_spec::flaming_fir_config()?),
+			// "fir" | "flaming-fir" => Box::new(chain_spec::flaming_fir_config()?),
 			"staging" => Box::new(chain_spec::staging_testnet_config()),
 			path =>
 				Box::new(chain_spec::ChainSpec::from_json_file(std::path::PathBuf::from(path))?),
@@ -89,14 +89,14 @@ pub fn run() -> Result<()> {
 		None => {
 			let runner = cli.create_runner(&cli.run)?;
 			runner.run_node_until_exit(|config| async move {
-				service::new_full(config, cli).map_err(sc_cli::Error::Service)
+				service::new_full(config, cli.no_hardware_benchmarks).map_err(sc_cli::Error::Service)
 			})
 		},
-		Some(Subcommand::Inspect(cmd)) => {
-			let runner = cli.create_runner(cmd)?;
-
-			runner.sync_run(|config| cmd.run::<Block, RuntimeApi, ExecutorDispatch>(config))
-		},
+		// Some(Subcommand::Inspect(cmd)) => {
+		// 	let runner = cli.create_runner(cmd)?;
+		//
+		// 	runner.sync_run(|config| cmd.run::<Block, RuntimeApi, ExecutorDispatch>(config))
+		// },
 		Some(Subcommand::Benchmark(cmd)) => {
 			let runner = cli.create_runner(cmd)?;
 
