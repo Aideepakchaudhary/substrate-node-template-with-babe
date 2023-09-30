@@ -19,7 +19,7 @@
 //! Substrate chain configurations.
 
 use grandpa_primitives::AuthorityId as GrandpaId;
-use node_template_runtime::{
+use earthy_node_runtime::{
 	constants::currency::*, wasm_binary_unwrap, BabeConfig, BalancesConfig, Block, CouncilConfig,
 	DemocracyConfig, ElectionsConfig, ImOnlineConfig, IndicesConfig, MaxNominations,
 	NominationPoolsConfig, SessionConfig, SessionKeys, SocietyConfig, StakerStatus, StakingConfig,
@@ -38,7 +38,7 @@ use sp_runtime::{
 	Perbill,
 };
 
-pub use node_template_runtime::RuntimeGenesisConfig;
+pub use earthy_node_runtime::RuntimeGenesisConfig;
 pub use node_primitives::{AccountId, Balance, Signature};
 
 type AccountPublic = <Signature as Verify>::Signer;
@@ -339,7 +339,7 @@ pub fn testnet_genesis(
 		},
 		sudo: SudoConfig { key: Some(root_key) },
 		babe: BabeConfig {
-			epoch_config: Some(node_template_runtime::BABE_GENESIS_EPOCH_CONFIG),
+			epoch_config: Some(earthy_node_runtime::BABE_GENESIS_EPOCH_CONFIG),
 			..Default::default()
 		},
 		im_online: ImOnlineConfig { keys: vec![] },

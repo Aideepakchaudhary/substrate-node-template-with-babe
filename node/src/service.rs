@@ -27,7 +27,7 @@ use codec::Encode;
 use frame_benchmarking_cli::SUBSTRATE_REFERENCE_HARDWARE;
 use frame_system_rpc_runtime_api::AccountNonceApi;
 use futures::prelude::*;
-use node_template_runtime::RuntimeApi;
+use earthy_node_runtime::RuntimeApi;
 use node_executor::ExecutorDispatch;
 use node_primitives::Block;
 use sc_client_api::{Backend, BlockBackend};
@@ -76,43 +76,43 @@ pub fn fetch_nonce(client: &FullClient, account: sp_core::sr25519::Pair) -> u32 
 pub fn create_extrinsic(
 	client: &FullClient,
 	sender: sp_core::sr25519::Pair,
-	function: impl Into<node_template_runtime::RuntimeCall>,
+	function: impl Into<earthy_node_runtime::RuntimeCall>,
 	nonce: Option<u32>,
-) -> node_template_runtime::UncheckedExtrinsic {
+) -> earthy_node_runtime::UncheckedExtrinsic {
 	let function = function.into();
 	let genesis_hash = client.block_hash(0).ok().flatten().expect("Genesis block exists; qed");
 	let best_hash = client.chain_info().best_hash;
 	let best_block = client.chain_info().best_number;
 	let nonce = nonce.unwrap_or_else(|| fetch_nonce(client, sender.clone()));
 
-	let period = node_template_runtime::BlockHashCount::get()
+	let period = earthy_node_runtime::BlockHashCount::get()
 		.checked_next_power_of_two()
 		.map(|c| c / 2)
 		.unwrap_or(2) as u64;
 	let tip = 0;
-	let extra: node_template_runtime::SignedExtra = (
-		frame_system::CheckNonZeroSender::<node_template_runtime::Runtime>::new(),
-		frame_system::CheckSpecVersion::<node_template_runtime::Runtime>::new(),
-		frame_system::CheckTxVersion::<node_template_runtime::Runtime>::new(),
-		frame_system::CheckGenesis::<node_template_runtime::Runtime>::new(),
-		frame_system::CheckEra::<node_template_runtime::Runtime>::from(generic::Era::mortal(
+	let extra: earthy_node_runtime::SignedExtra = (
+		frame_system::CheckNonZeroSender::<earthy_node_runtime::Runtime>::new(),
+		frame_system::CheckSpecVersion::<earthy_node_runtime::Runtime>::new(),
+		frame_system::CheckTxVersion::<earthy_node_runtime::Runtime>::new(),
+		frame_system::CheckGenesis::<earthy_node_runtime::Runtime>::new(),
+		frame_system::CheckEra::<earthy_node_runtime::Runtime>::from(generic::Era::mortal(
 			period,
 			best_block.saturated_into(),
 		)),
-		frame_system::CheckNonce::<node_template_runtime::Runtime>::from(nonce),
-		frame_system::CheckWeight::<node_template_runtime::Runtime>::new(),
-		pallet_asset_conversion_tx_payment::ChargeAssetTxPayment::<node_template_runtime::Runtime>::from(
+		frame_system::CheckNonce::<earthy_node_runtime::Runtime>::from(nonce),
+		frame_system::CheckWeight::<earthy_node_runtime::Runtime>::new(),
+		pallet_asset_conversion_tx_payment::ChargeAssetTxPayment::<earthy_node_runtime::Runtime>::from(
 			tip, None,
 		),
 	);
 
-	let raw_payload = node_template_runtime::SignedPayload::from_raw(
+	let raw_payload = earthy_node_runtime::SignedPayload::from_raw(
 		function.clone(),
 		extra.clone(),
 		(
 			(),
-			node_template_runtime::VERSION.spec_version,
-			node_template_runtime::VERSION.transaction_version,
+			earthy_node_runtime::VERSION.spec_version,
+			earthy_node_runtime::VERSION.transaction_version,
 			genesis_hash,
 			best_hash,
 			(),
@@ -122,10 +122,10 @@ pub fn create_extrinsic(
 	);
 	let signature = raw_payload.using_encoded(|e| sender.sign(e));
 
-	node_template_runtime::UncheckedExtrinsic::new_signed(
+	earthy_node_runtime::UncheckedExtrinsic::new_signed(
 		function,
 		sp_runtime::AccountId32::from(sender.public()).into(),
-		node_template_runtime::Signature::Sr25519(signature),
+		earthy_node_runtime::Signature::Sr25519(signature),
 		extra,
 	)
 }
@@ -631,7 +631,7 @@ pub fn new_full(
 mod tests {
 	use crate::service::{new_full_base, NewFullBase};
 	use codec::Encode;
-	use node_template_runtime::{
+	use earthy_node_runtime::{
 		constants::{currency::CENTS, time::SLOT_DURATION},
 		Address, BalancesCall, RuntimeCall, UncheckedExtrinsic,
 	};

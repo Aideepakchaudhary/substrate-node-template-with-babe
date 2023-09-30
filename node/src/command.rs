@@ -23,7 +23,7 @@ use crate::{
 	cli::{Cli, Subcommand},
 };
 use frame_benchmarking_cli::*;
-use node_template_runtime::{ExistentialDeposit, RuntimeApi};
+use earthy_node_runtime::{ExistentialDeposit, RuntimeApi};
 use node_executor::ExecutorDispatch;
 use node_primitives::Block;
 use sc_cli::{Result, SubstrateCli};
@@ -34,13 +34,13 @@ use std::sync::Arc;
 
 #[cfg(feature = "try-runtime")]
 use {
-	node_template_runtime::constants::time::SLOT_DURATION,
+	earthy_node_runtime::constants::time::SLOT_DURATION,
 	try_runtime_cli::block_building_info::substrate_info,
 };
 
 impl SubstrateCli for Cli {
 	fn impl_name() -> String {
-		"Substrate Node".into()
+		"Earthy Node".into()
 	}
 
 	fn impl_version() -> String {

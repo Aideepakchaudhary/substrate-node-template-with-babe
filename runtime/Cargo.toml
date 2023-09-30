@@ -1,13 +1,13 @@
 [package]
-name = "node-template-runtime"
+name = "earthy-node-runtime"
 version = "4.0.0-dev"
-authors = ["Parity Technologies <admin@parity.io>"]
-description = "Substrate node kitchensink runtime."
+authors = ["Earthy Devs <https://github.com/EarthyJedis>"]
+description = "Earthy Chain Runtime."
 edition = "2021"
 build = "build.rs"
 license = "Apache-2.0"
 homepage = "https://substrate.io"
-repository = "https://github.com/paritytech/substrate/"
+repository = "https://github.com/EarthyJedis/Earthy_Testnet"
 publish = false
 
 [package.metadata.docs.rs]
